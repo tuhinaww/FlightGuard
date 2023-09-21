@@ -9,11 +9,11 @@ import {
   FormLabel,
   HStack,
   Checkbox,
-  Text,
-  Button,
 } from "@chakra-ui/react";
+import { createSearchParams, useNavigate } from "react-router-dom";
+import { Text } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import "./Background.css";
-import Globe from '../components/Globe'
 
 const Home = () => {
   const [flightNumber, setFlightNumber] = React.useState("");
@@ -22,7 +22,9 @@ const Home = () => {
   const [year, setYear] = React.useState("");
   const [minutes, setMinutes] = React.useState("");
   const [hours, setHours] = React.useState("");
-  const [luggage] = React.useState(true);
+  const [luggage, setLuggage] = React.useState(true);
+
+  const navigate = useNavigate();
 
   // check if any fields are empty
   const checkFields = () => {
@@ -46,110 +48,118 @@ const Home = () => {
     return true;
   };
 
-  const searchFlight = async () => {
+  const searchFlight = async (e) => {
+    e.preventDefault();
+
     if (!checkFields()) {
       return;
     }
 
     const data = {
-      flightNumber: flightNumber,
+      flightNumber,
       arrivalTime: new Date(Date.UTC(year, month - 1, day, hours, minutes)),
-      luggage: luggage,
+      luggage,
     };
 
-    const options = {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    navigate(`/search?${createSearchParams(data).toString()}`);
 
-    const response = await fetch("http://localhost:3000/listings/new", options);
-    const json = await response.json();
-    if (json.error) {
-      alert(json.error);
-    } else {
-      alert("We're gonna make this flight!!!");
-    }
+    // const options = {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // };
+
+    // const response = await fetch("http://localhost:3000/listings/new", options);
+    // const json = await response.json();
+    // if (json.error) {
+    //   alert(json.error);
+    // } else {
+    //   alert("We're gonna make this flight!!!");
+    // }
   };
 
   return (
     <>
-    <Globe/>
-    {/* <div id="lightblue"> */}
-      {/* <div id="cloud-intro"> */}
-      {/* <Container> */}
-        {/* <Center>
-          <Heading size={"4xl"} marginTop="15vh">Welcome to - FlightGuard!</Heading>
-        </Center>
-        <Card padding={10} marginTop={"15vh"}>
-          <FormControl>
-            <FormLabel>Enter your flight number below</FormLabel>
-            <Input
-              type="text"
-              value={flightNumber}
-              onChange={(event) => setFlightNumber(event.target.value)}
-              placeholder="Flight number"
-            />
-
-            <FormLabel marginTop={10}>When are you arriving at the airport?</FormLabel>
-<HStack justifyContent={"center"}>
-              <Input
-                type="text"
-                placeholder="dd"
-                onChange={(event) => setDay(event.target.value)}
-                style={{width: "80px"}}
-              />
-              <Text>/</Text>
-              <Input
-                type="text"
-                placeholder="mm"
-                onChange={(event) => setMonth(event.target.value)}
-                style={{width: "80px"}}
-              />
-              <Text>/</Text>
-              <Input
-                type="text"
-                placeholder="yyyy"
-                onChange={(event) => setYear(event.target.value)}
-                style={{width: "80px"}}
-              />
-            </HStack>
-
-<HStack justifyContent={"center"}>
-<Input
-                type="text"
-                placeholder="hh"
-                onChange={(event) => setHours(event.target.value)}
-                style={{width: "80px"}}
-
-              />
-              <Text>:</Text>
-              <Input
-                type="text"
-                placeholder="mm"
-                onChange={(event) => setMinutes(event.target.value)}
-                style={{width: "80px"}}
-              />
-</HStack>
-            <HStack marginTop={10}>
-            <Checkbox defaultChecked value={luggage} >
-              I am checking in luggage.
-            </Checkbox>
-            </HStack>
-
+      <div id="lightblue">
+        <Container>
           <Center>
-
-            <Button marginTop={10} colorScheme="blue" onClick={searchFlight} type="submit">
-              Search
-            </Button>
+            <Heading size={"4xl"} marginTop="15vh">
+              Welcome to - FlightGuard!
+            </Heading>
           </Center>
-          </FormControl>
-        </Card> */}
-      {/* </Container> */}
-      {/* </div> */}
-    {/* </div> */}
+          <Card padding={10} marginTop={"15vh"}>
+            <FormControl>
+              <FormLabel>Enter your flight number below</FormLabel>
+              <Input
+                type="text"
+                value={flightNumber}
+                onChange={(event) => setFlightNumber(event.target.value)}
+                placeholder="Flight number"
+              />
+
+              <FormLabel marginTop={10}>
+                When are you arriving at the airport?
+              </FormLabel>
+              <HStack justifyContent={"center"}>
+                <Input
+                  type="text"
+                  placeholder="dd"
+                  onChange={(event) => setDay(event.target.value)}
+                  style={{ width: "80px" }}
+                />
+                <Text>/</Text>
+                <Input
+                  type="text"
+                  placeholder="mm"
+                  onChange={(event) => setMonth(event.target.value)}
+                  style={{ width: "80px" }}
+                />
+                <Text>/</Text>
+                <Input
+                  type="text"
+                  placeholder="yyyy"
+                  onChange={(event) => setYear(event.target.value)}
+                  style={{ width: "80px" }}
+                />
+              </HStack>
+
+              <HStack justifyContent={"center"}>
+                <Input
+                  type="text"
+                  placeholder="hh"
+                  onChange={(event) => setHours(event.target.value)}
+                  style={{ width: "80px" }}
+                />
+                <Text>:</Text>
+                <Input
+                  type="text"
+                  placeholder="mm"
+                  onChange={(event) => setMinutes(event.target.value)}
+                  style={{ width: "80px" }}
+                />
+              </HStack>
+              <HStack marginTop={10}>
+                <Checkbox onChange={(event) => setLuggage(event.target.checked)} value={luggage}>
+                  I am checking in luggage.
+                </Checkbox>
+              </HStack>
+
+              <Center>
+                <Button
+                  marginTop={10}
+                  colorScheme="blue"
+                  onClick={searchFlight}
+                  type="submit"
+                >
+                  Search
+                </Button>
+              </Center>
+            </FormControl>
+          </Card>
+        </Container>
+      </div>
     </>
   );
 };

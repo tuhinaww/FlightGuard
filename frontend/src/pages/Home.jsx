@@ -9,11 +9,11 @@ import {
   FormLabel,
   HStack,
   Checkbox,
+  Text,
+  Button,
 } from "@chakra-ui/react";
-import { createSearchParams, useNavigate } from "react-router-dom";
-import { Text } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
 import "./Background.css";
+import Globe from '../components/Globe'
 
 const Home = () => {
   const [flightNumber, setFlightNumber] = React.useState("");
@@ -23,8 +23,6 @@ const Home = () => {
   const [minutes, setMinutes] = React.useState("");
   const [hours, setHours] = React.useState("");
   const [luggage] = React.useState(true);
-
-  const navigate = useNavigate();
 
   // check if any fields are empty
   const checkFields = () => {
@@ -48,43 +46,40 @@ const Home = () => {
     return true;
   };
 
-  const searchFlight = async (e) => {
-    e.preventDefault();
-
+  const searchFlight = async () => {
     if (!checkFields()) {
       return;
     }
 
     const data = {
-      flightNumber,
+      flightNumber: flightNumber,
       arrivalTime: new Date(Date.UTC(year, month - 1, day, hours, minutes)),
-      luggage,
+      luggage: luggage,
     };
 
-    navigate(`/search?${createSearchParams(data).toString()}`);
+    const options = {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
-    // const options = {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // };
-
-    // const response = await fetch("http://localhost:3000/listings/new", options);
-    // const json = await response.json();
-    // if (json.error) {
-    //   alert(json.error);
-    // } else {
-    //   alert("We're gonna make this flight!!!");
-    // }
+    const response = await fetch("http://localhost:3000/listings/new", options);
+    const json = await response.json();
+    if (json.error) {
+      alert(json.error);
+    } else {
+      alert("We're gonna make this flight!!!");
+    }
   };
 
   return (
     <>
-    <div id="lightblue">
+    <Globe/>
+    {/* <div id="lightblue"> */}
       {/* <div id="cloud-intro"> */}
-      <Container>
+      {/* <Container> */}
         <Center>
           <Heading size={"4xl"} marginTop="15vh">Welcome to - FlightGuard!</Heading>
         </Center>
@@ -152,8 +147,8 @@ const Home = () => {
           </Center>
           </FormControl>
         </Card>
-      </Container>
-      </div>
+      {/* </Container> */}
+      {/* </div> */}
     {/* </div> */}
     </>
   );

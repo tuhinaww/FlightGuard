@@ -10,10 +10,10 @@ import {
   HStack,
   Checkbox,
 } from "@chakra-ui/react";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import { Text } from "@chakra-ui/react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import "./Background.css";
-import "./Home.css";
 
 const Home = () => {
   const [flightNumber, setFlightNumber] = React.useState("");
@@ -22,7 +22,9 @@ const Home = () => {
   const [year, setYear] = React.useState("");
   const [minutes, setMinutes] = React.useState("");
   const [hours, setHours] = React.useState("");
-  const [luggage, setLuggage] = React.useState(true);
+  const [luggage] = React.useState(true);
+
+  const navigate = useNavigate();
 
   // check if any fields are empty
   const checkFields = () => {
@@ -46,32 +48,36 @@ const Home = () => {
     return true;
   };
 
-  const searchFlight = async () => {
+  const searchFlight = async (e) => {
+    e.preventDefault();
+
     if (!checkFields()) {
       return;
     }
 
     const data = {
-      flightNumber: flightNumber,
+      flightNumber,
       arrivalTime: new Date(Date.UTC(year, month - 1, day, hours, minutes)),
-      luggage: luggage,
+      luggage,
     };
 
-    const options = {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    navigate(`/search?${createSearchParams(data).toString()}`);
 
-    const response = await fetch("http://localhost:3000/listings/new", options);
-    const json = await response.json();
-    if (json.error) {
-      alert(json.error);
-    } else {
-      alert("We're gonna make this flight!!!");
-    }
+    // const options = {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // };
+
+    // const response = await fetch("http://localhost:3000/listings/new", options);
+    // const json = await response.json();
+    // if (json.error) {
+    //   alert(json.error);
+    // } else {
+    //   alert("We're gonna make this flight!!!");
+    // }
   };
 
   return (
@@ -80,7 +86,7 @@ const Home = () => {
       {/* <div id="cloud-intro"> */}
       <Container>
         <Center>
-          <Heading size={"4xl"} marginTop="15vh">Will I Make My Flight?</Heading>
+          <Heading size={"4xl"} marginTop="15vh">Welcome to - FlightGuard!</Heading>
         </Center>
         <Card padding={10} marginTop={"15vh"}>
           <FormControl>

@@ -81,7 +81,7 @@ const Home = () => {
       {/* <div id="cloud-intro"> */}
       {/* <Container> */}
         {/* <Center>
-          <Heading size={"4xl"} marginTop="15vh">Welcome to - FlightGuard</Heading>
+          <Heading size={"4xl"} marginTop="15vh">Welcome to - FlightGuard!</Heading>
         </Center>
         <Card padding={10} marginTop={"15vh"}>
           <FormControl>

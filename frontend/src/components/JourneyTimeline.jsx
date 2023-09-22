@@ -17,6 +17,8 @@ import {
   StepTitle,
   Stepper,
 } from "@chakra-ui/react";
+import React from "react";
+import FadeIn from "react-fade-in";
 
 const BAG_CHECK_MED = 30;
 const BAG_CHECK_SEV = 50;
@@ -183,6 +185,7 @@ const JourneyTimeline = ({
       label: "Scheduled take off",
       icon: FaPlaneDeparture,
       iconStyle: bodyText,
+      hideBadge: true,
       predictedTime: addMinutes(departure_time_scheduled, 0).diff(
         addMinutes(
           arrival_airport,
@@ -196,6 +199,7 @@ const JourneyTimeline = ({
       time: addMinutes(departure_time_scheduled, predicted_flight_delay),
       label: "Predicted take off",
       style: dashedGrey,
+      hideBadge: true,
       predictedTime: Math.min(
         predicted_flight_delay,
         addMinutes(departure_time_scheduled, predicted_flight_delay).diff(
@@ -215,65 +219,68 @@ const JourneyTimeline = ({
     predicted_bag_check === -1 ? eventsWithoutBag : eventsWithBag;
 
   return (
-    <Stepper size="lg" orientation="vertical" height="600px" gap="0">
-      {eventsToDisplay.map(
-        (
-          {
-            label,
-            time,
-            predictedTime,
-            style,
-            nextStyle,
-            badgeColor,
-            icon,
-            iconStyle,
-          },
-          index
-        ) => (
-          <Step key={index} style={{ transition: "opacity 1s ease-in" }}>
-            <StepIndicator style={style ?? grey}>
-              {icon && <Icon as={icon} color={iconStyle} />}
-            </StepIndicator>
+    <FadeIn transitionDuration={3000}>
+      <Stepper size="lg" orientation="vertical" height="600px" gap="0" marginLeft="70px">
+        {eventsToDisplay.map(
+          (
+            {
+              label,
+              time,
+              predictedTime,
+              style,
+              nextStyle,
+              badgeColor,
+              icon,
+              iconStyle,
+              hideBadge,
+            },
+            index
+          ) => (
+            <Step key={index}>
+              <StepIndicator style={style ?? grey}>
+                {icon && <Icon as={icon} color={iconStyle} />}
+              </StepIndicator>
 
-            <Box flexShrink="0">
-              <StepTitle
-                style={
-                  predictedTime < 0
-                    ? {
+              <Box flexShrink="0">
+                <StepTitle
+                  style={
+                    predictedTime < 0
+                      ? {
                         fontWeight: "bold",
                         color: "var(--chakra-colors-red-500)",
                       }
-                    : {}
-                }
-              >
-                {label}
-              </StepTitle>
-              <StepDescription
-                style={{
-                  position: "absolute",
-                  top: "0.5rem",
-                  marginLeft: "-8rem",
-                  fontWeight: predictedTime < 0 ? "bold" : "normal",
-                  color:
-                    predictedTime < 0 ? "var(--chakra-colors-red-500)" : "",
-                }}
-              >
-                {time.format("LT")}
-              </StepDescription>
-              <StepDescription>
-                {predictedTime && (
-                  <Badge colorScheme={predictedTime < 0 ? "red" : badgeColor}>
-                    {predictedTime} mins
-                  </Badge>
-                )}
-              </StepDescription>
-            </Box>
+                      : {}
+                  }
+                >
+                  {label}
+                </StepTitle>
+                <StepDescription
+                  style={{
+                    position: "absolute",
+                    top: "0.5rem",
+                    marginLeft: "-8rem",
+                    fontWeight: predictedTime < 0 ? "bold" : "normal",
+                    color:
+                      predictedTime < 0 ? "var(--chakra-colors-red-500)" : "",
+                  }}
+                >
+                  {time.format("LT")}
+                </StepDescription>
+                <StepDescription>
+                  {predictedTime && !hideBadge && (
+                    <Badge colorScheme={predictedTime < 0 ? "red" : badgeColor}>
+                      {predictedTime < 0 ? `Late by ${predictedTime * -1} mins` : `${predictedTime} mins`}
+                    </Badge>
+                  )}
+                </StepDescription>
+              </Box>
 
-            <StepSeparator style={nextStyle} />
-          </Step>
-        )
-      )}
-    </Stepper>
+              <StepSeparator style={nextStyle} />
+            </Step>
+          )
+        )}
+      </Stepper>
+    </FadeIn>
   );
 };
 

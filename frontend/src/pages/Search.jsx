@@ -6,17 +6,23 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { JourneyTimeline } from "../components";
-import { useSearchParams } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Background.css";
+import "./Globe.css";
+import FadeIn from "react-fade-in";
+
 
 const dummyData = {
-  percent_chance: 50,
+  departure_long: -118.40853, // LAX
+  departure_lat: 33.9415889, // LAX
+  percent_chance: 49,
   departure_airport: "LAX", // AIRPORT CODE
-  departure_time_scheduled: "2023-07-01T08:30:37Z", // UTC
-  arrival_airport: "2023-07-01T09:07:37Z", // UTC
+  departure_time_scheduled: "2023-07-01T10:30:37", // UTC
+  arrival_airport: "2023-07-01T09:07:37", // UTC
   predicted_bag_check: 20, // FIXED amount of time for bag check in
   predicted_security: 30, // in minutes
+  predicted_walk_to_gate: 15, // in minutes
   predicted_flight_delay: 60, // in minutes
 };
 
@@ -34,13 +40,14 @@ const Search = () => {
   const [searchParams] = useSearchParams();
   const [loaded, setLoaded] = useState(false);
   const [likelihood, setLikelihood] = useState({});
+  const flyTo = useOutletContext();
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const request = {
-        flightNumber: searchParams.get("flightNumber"),
-        arrivalTime: searchParams.get("arrivalTime"),
-        luggage: searchParams.get("luggage"),
+        flight_number: searchParams.get("flightNumber"),
+        arrival_time: searchParams.get("arrivalTime"),
+        bag_check: searchParams.get("bagCheck"),
       };
       // Call endpoint
       const options = {
@@ -51,50 +58,61 @@ const Search = () => {
         },
       };
 
-      const response = await fetch(
-        // TODO: endpoint
-        "http://localhost:3000/listings/new",
-        options
-      );
-
       try {
+        const response = await fetch(
+          "http://localhost:3010/flightlikelihood",
+          options
+        );
         const json = await response.json();
 
         if (json.error) {
           console.error(json.error);
           setLikelihood(dummyData);
+          flyTo([dummyData.departure_long, dummyData.departure_lat]);
           console.log("error branch");
         } else {
           setLikelihood(json);
           console.log("correct branch");
+        flyTo([json.departure_long, json.departure_lat]);
         }
       } catch (e) {
         console.error(e);
         setLikelihood(dummyData);
+        flyTo([dummyData.departure_long, dummyData.departure_lat]);
       }
 
       setLoaded(true);
+      // console.log("FLYING OVER!");
+      // flyTo([(Math.random() - 0.5) * 360, (Math.random() - 0.5) * 100]);
     }, 1000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [searchParams]);
+  }, [searchParams, flyTo]);
 
   return loaded ? (
     <VStack>
-      <Text
-        color={colorStyle(likelihood.percent_chance)}
-        fontWeight={"bold"}
-        fontSize="6xl"
-      >
-        {likelihood.percent_chance}%
-      </Text>
-      <Text>is the chance you will make your flight</Text>
-
+      <FadeIn transitionDuration={4000}>
+        <Text align="center" fontSize="3xl">you have a </Text>
+      </FadeIn>
+      <FadeIn transitionDuration={4000}>
+        <Text
+          color={colorStyle(likelihood.percent_chance)}
+          // fontFamily='DM Serif Display' serif 
+          fontWeight={"bold"}
+          fontSize="9xl"
+        >
+          {likelihood.percent_chance}%
+        </Text>
+        </FadeIn>
+      <FadeIn transitionDuration={4000}>
+        <Text align="center" fontSize="3xl">chance of making your flight</Text>
+       </FadeIn>
       <Divider marginTop="50px" marginBottom="50px" />
-
-      <Text marginBottom="30px">Predicted timeline:</Text>
+         <FadeIn transitionDuration={6000}>
+          <Text marginBottom="30px">Your anticipated timeline is:</Text>
+         </FadeIn>
       <JourneyTimeline likelihood={likelihood} />
     </VStack>
   ) : (

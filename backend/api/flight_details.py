@@ -3,6 +3,7 @@ import re
 import os
 from dotenv import load_dotenv
 import requests
+import json
 
 from helpers import AIRLABS_TS_FMT, DEFAULT_TS_FMT
 
@@ -30,20 +31,35 @@ def fetch_flight_details(flight_num, arrival_time):
             "flight_iata": flight_num
         })
         body = response.json()
+        print(body)
         if "response" in body:
             details = body["response"]
             airport = details["dep_iata"]
+            gate = details["dep_gate"]
             dep_time = details["dep_time"]
 
             dep_time_object = datetime.strptime(dep_time, AIRLABS_TS_FMT)
             dep_time = dep_time_object.strftime(DEFAULT_TS_FMT)
         else:
             raise Exception("Invalid request")
-    except:
+    
+        with open("data/airport-locations.json", "r") as f:
+            locations = json.load(f)
+            latitude = locations[airport]["latitude"]
+            longitude = locations[airport]["longitude"]
+    
+    except Exception as e:
+        print(e)
         airport = "LAX"
-        dep_time = "2023-07-01T12:07:37Z"
+        dep_time = "2023-07-01T12:07:37"
+        gate = "29"
+        latitude = 33.94254
+        longitude = -118.40807
 
     return {
         "airport": airport,
-        "scheduled_departure_time": dep_time
+        "gate": gate,
+        "scheduled_departure_time": dep_time,
+        "longitude": longitude,
+        "latitude": latitude
     }

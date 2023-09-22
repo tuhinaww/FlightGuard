@@ -26,4 +26,3 @@ with open(f"../data/airport-sizes.csv", "w") as f:
     writer = csv.writer(f, delimiter=",")
     writer.writerow(headers)
     writer.writerows(all_rows)
-        

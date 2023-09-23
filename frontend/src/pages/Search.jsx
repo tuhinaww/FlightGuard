@@ -20,7 +20,7 @@ const dummyData = {
   departure_airport: "LAX", // AIRPORT CODE
   departure_time_scheduled: "2023-07-01T10:30:37", // UTC
   arrival_airport: "2023-07-01T09:07:37", // UTC
-  predicted_bag_check: 20, // FIXED amount of time for bag check in
+  predicted_bag_check: 20, // FIXED amount of time for bag check in (expected)
   predicted_security: 30, // in minutes
   predicted_walk_to_gate: 15, // in minutes
   predicted_flight_delay: 60, // in minutes

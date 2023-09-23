@@ -26,6 +26,48 @@ Traveling can be a whirlwind, especially when you're in a race against time to c
 
 3. **Interactive Destination Map**: Explore an interactive map of your destination for enhanced travel planning.
 
+## How It Was Built?
+
+| Component       | Technology Stack                                      |
+|-----------------|-------------------------------------------------------|
+| **Frontend**    | React, JavaScript, Chakra UI, Map API                |
+| **Backend**     | Machine Learning Model, US Bureau of Transportation Statistics Data |
+| **Airport Efficiency** | Considered security line and bag check-in waiting times |
+| **Flight Delay Prediction** | Utilized historical flight detail data               |
+
+## Challenges Faced
+
+1. Limited Data Scope
+
+2. Data Availability
+
+## Accomplishments to Be Proud Of
+
+| Milestone                                           | Description                                      |
+|-----------------------------------------------------|--------------------------------------------------|
+| User-friendly and visually appealing interface     | Design that enhances usability and aesthetics.   |
+| Global coverage                                     | Expanded data access to provide worldwide flight information. |
+| Precision planning                                  | Empowered travelers with accurate boarding timelines. |
+| Machine learning accuracy                           | Developed a highly accurate flight delay prediction model. |
+
+## Lessons Learned
+
+- [x] **Data Challenges**: Dealing with limited and diverse data sources taught us the importance of data quality and consistency.
+
+- [x] **User-Centric Design**: Prioritizing a user-friendly interface highlighted the significance of enhancing the user experience.
+
+- [x] **Machine Learning Insights**: Building a flight delay prediction model provided insights into the power of data-driven decision-making.
+
+## What's next for FlightGuard?
+
+| Next Steps                                     | Description                                       |
+|------------------------------------------------|---------------------------------------------------|
+| Integration with airline databases              | Enhance accuracy by integrating real-time data.  |
+| Mobile app development                         | Expand accessibility with a dedicated mobile app. |
+| User feedback and improvement                  | Continuously gather feedback to refine the user experience. |
+
+
+
 ## Getting Started
 
 **Frontend**:

@@ -1,4 +1,4 @@
-# FlightGuard - Your Travel Buddy
+# FlightGuard - Your Travel Buddy ✈️
 
 Traveling can be a whirlwind, especially when you're in a race against time to catch your flight. FlightGuard is here to simplify your travel experience! It takes your flight details and your estimated arrival time at the airport, calculates the likelihood of missing your flight, and provides estimated times for each stage of your journey from arriving at the airport to departing from it. With FlightGuard, you can say goodbye to travel stress!
 
